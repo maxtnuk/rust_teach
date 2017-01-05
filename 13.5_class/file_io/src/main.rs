@@ -1,6 +1,5 @@
 extern crate rand;
 use rand::Rng;
-use std::io;
 use std::fmt;
 
 fn control_err() -> ! {
@@ -23,11 +22,13 @@ impl fmt::Display for FileContent {
 }
 fn main() {
     {
+        use std::io;
         let mut x_string = String::new();
         io::stdin().read_line(&mut x_string).expect("fail to read");
         println!("read some string {}", x_string);
     }
     {
+        use std::io;
         use std::io::Read;
         let mut x_vec: Vec<u8> = Vec::new();
         io::stdin().read_to_end(&mut x_vec).expect("fail to read");
