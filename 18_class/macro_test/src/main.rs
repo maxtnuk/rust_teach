@@ -1,16 +1,24 @@
-use std::collections::HashMap;
-macro_rules! seperate{
-    [$($x:expr),*] => {{
-            let mut result= HashMap::new();
-            $(
-            let count=result.entry($x).or_insert(0);
-            *count +=1;
-            )*
-            result
-        }
-    };
+macro_rules! write_html {
+    ($w:expr, ) => (());
+
+    ($w:expr, $e:tt) => (write!($w, "{}", $e));
+
+    ($w:expr, $tag:ident [ $($inner:tt)* ] $($rest:tt)*) => {{
+        write!($w, "<{}>", stringify!($tag));
+        write_html!($w, $($inner)*);
+        write!($w, "</{}>", stringify!($tag));
+        write_html!($w, $($rest)*);
+    }};
 }
+
 fn main() {
-    let get = seperate![2, 1, 3, 4, 5, 2, 2, 9];
-    println!("here is the result {:?}", get);
+    use std::fmt::Write;
+    let mut out = String::new();
+
+    write_html!(&mut out,
+        html[
+            head[title["Macros guide"]]
+            body[h1["Macros are the best!"]]
+        ]);
+    println!("{}",out);
 }
